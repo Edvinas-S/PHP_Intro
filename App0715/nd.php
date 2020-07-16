@@ -23,6 +23,10 @@ echo '<br><br> Surikiuojame nuo lengviausio: <br>';
 asort($my_array);
 print_r($my_array);
 echo '<br><br> Mūsų žmogeliukų bendras svoris yra: ' . array_sum($my_array);
+if (array_sum($my_array) < 500) 
+    return print('<br><br> Mūsų chebrytė galės kilti liftu!!');
+    else 
+    return print('<br><br> Deja mes persunkūs :)');
 
     ?>
 
