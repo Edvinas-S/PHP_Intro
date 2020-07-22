@@ -1,3 +1,4 @@
+<?php declare(strict_types=1);?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,8 @@
     <title>2020-07-20</title>
 </head>
 <body>
-    <?php //declare(strict_types=1); NEVEIKIA!!
-    require 'lib.php';
+    <?php
+        require 'lib.php';
         $array = array(8, 6, 7, 5, 1, 0, 3, 2, 4, 9);
         print('Musu nerūšiuotas skaičių masyvas: ');
         print_r($array);
