@@ -29,7 +29,7 @@
             $refresh_start = explode('%2F', $_SERVER['QUERY_STRING'],-1);
             $refresh_last = '?' . implode('/',$refresh_start).'/';
             header('Location: ' . $refresh_last);
-        } // NOT WORKING IN PARENT DIRECTORY
+        } // NOT WORKING IN PARENT DIRECTORY FROM START OF PROGRAM
             $refresh_start = explode('%2F', $_SERVER['QUERY_STRING'],-1); 
             $refresh_last = '?' . implode('/',$refresh_start).'/';
             header('Location: ' . $refresh_last);
@@ -42,6 +42,54 @@
         if(is_file($file_delete)){
             unlink($file_delete);
             header('Refresh:0');
+        }
+    }
+
+    //file download logic
+    if(isset($_POST['download'])){
+        $downloadPath='./' . $_GET["my_way"] . $_POST['download'];
+        $downloadFile = str_replace("&nbsp;", " ", htmlentities($downloadPath, ENT_QUOTES, 'utf-8'));
+        ob_clean();
+        ob_start();
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf'); // mime type → ši forma turėtų veikti daugumai failų, su šiuo mime type. Jei neveiktų reiktų daryti sudėtingesnę logiką
+        header('Content-Disposition: attachment; filename=' . basename($downloadFile));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($downloadFile)); // kiek baitų browseriui laukti, jei 0 - failas neveiks nors bus sukurtas
+        ob_end_flush();
+        readfile($downloadFile);
+        exit;
+    }
+
+    //file upload logic
+    if(isset($_FILES['fileToUpload'])){
+        $errors= array();
+        $file_name = $_FILES['fileToUpload']['name'];
+        $file_size = $_FILES['fileToUpload']['size'];
+        $file_tmp = $_FILES['fileToUpload']['tmp_name'];
+        $file_type = $_FILES['fileToUpload']['type'];
+        $file_ext = strtolower(end(explode('.', $_FILES['fileToUpload']['name'])));
+        
+        $extensions= array('jpeg','jpg','txt','pptx','xlsx','docx');
+        
+        if(in_array($file_ext , $extensions) === false){
+           $errors[] = "extension not allowed, please choose a JPEG, PNG, TXT, PPTX, XLSX, DOCX file.";
+        }
+        
+        if($file_size > 1048576 ) {
+           $errors[] = 'File size must be below 1 MB';
+        }
+        
+        if(empty($errors)==true) {
+           move_uploaded_file($file_tmp, './' . $_GET["my_way"] . $file_name);
+           echo "Success";
+        }else{
+            print_r($_FILES);
+            print('<br>');
+            print_r($errors);
         }
     }
 
@@ -78,71 +126,60 @@
     $path = './'.$_GET['my_way'];
     $files = scandir($path);
     print('<h2>You are in: '. $path .'</h2>');
-    print('<button onclick="history.go(-1);">Simple BACK button</button>'); //simple "back" button
-    echo '<br>';
     echo '<br>';
     print('<table>');
-    print('<tr><th>File or Folder</th><th>Name</th><th>Action (for future)</th></tr>');
+    print('<tr><th>File or Folder</th><th>Name</th><th>Action</th></tr>');
 
-        // main structure - scan current directory and show files/folders
-        foreach ($files as $file) {
-            print('<tr>');
-            if ($file != '.' && $file != '..') {
-                print('<td>'. (is_dir($path . $file) ? 'Folder' : 'File') .'</td>');
-                print('<td>');
-                if (is_dir($path . $file) == 'true') {
-                    print('<a href="');
-                    if (isset($_GET['my_way']) == 'true') {
-                        print($_SERVER['REQUEST_URI'] . $file . '/'. '">' . $file . '</a>');
-                    } else print($_SERVER['REQUEST_URI'] . '?my_way=/' . $file . '/'. '">' . $file . '</a>');
-                } else 
-                print($file.'</td>'); //delete file button
-                print((is_file($path . $file) ? 
-                    '<td><form method="post"><input type="hidden" name="deletion" value=' .str_replace(' ', '&nbsp;', $file).'><input type="submit" value="Delete"></form></td>' 
-                    : "<td> Don't touch :) </td>"));
-            }       
-            print('</tr>');
-        }
+    // main structure - scan current directory and show files/folders
+    foreach ($files as $file) {
+        print('<tr>');
+        if ($file != '.' && $file != '..') {
+            print('<td>'. (is_dir($path . $file) ? 'Folder' : 'File') .'</td>');
+            print('<td>');
+            if (is_dir($path . $file) == 'true') {
+                print('<a href="');
+                if (isset($_GET['my_way']) == 'true') {
+                    print($_SERVER['REQUEST_URI'] . $file . '/'. '">' . $file . '</a>');
+                } else print($_SERVER['REQUEST_URI'] . '?my_way=/' . $file . '/'. '">' . $file . '</a>');
+            } else 
+            print($file.'</td>'); //delete/download file buttons
+            print((is_file($path . $file) ? '<td>
+                <form method="post" style="display: inline-block"><input type="hidden" name="deletion" value='.str_replace(' ', '&nbsp;', $file).'><input type="submit" value="Delete"></form>
+                <form method="post" style="display: inline-block"><input type="hidden" name="download" value='.str_replace(' ', '&nbsp;', $file).'><input type="submit" value="Download"></form>
+                </td>' 
+                : "<td> Don't touch :) </td>"));
+        }       
+        print('</tr>');
+    }
     print('</table>');
     echo '<br>';
 
     //back button
     print("\t".'<button><a href="');
-        $back_fake = explode('/', $_SERVER['QUERY_STRING']);
-        $back_real = explode('/', $_SERVER['QUERY_STRING'],-2);
-        if (count($back_fake) == 1 || count($back_fake) == 2) {
-            print('?my_way=/'.'">Normal BACK button</a>');
-        } else
-        print('?'.implode('/',$back_real).'/'.'"> Normal BACK button </a>');
-        print('</button><br><br>')
+    $back_fake = explode('/', $_SERVER['QUERY_STRING']);
+    $back_real = explode('/', $_SERVER['QUERY_STRING'],-2);
+    if (count($back_fake) == 1 || count($back_fake) == 2) {
+        print('?my_way=/'.'">BACK button</a>');
+    } else
+        print('?'.implode('/',$back_real).'/'.'">BACK button</a>');
+        print('</button><br>')
     ?>
 
+    <!-- upload file -->
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="fileToUpload"/>
+        <button type="submit">Upload file</button>
+    </form>
+
     <!-- new directory -->
-    <form action="/0_Filebrowser" method="get"> 
+    <br>
+    <form method="get"> 
         <input type="hidden" name="my_way" value="<?php print($_GET['my_way']) ?>" /> 
         <input placeholder="New folder name" type="text" name="new_dir">
         <button type="submit">Create</button>
     </form>
 
-
-    <? // ERROR catching
-        // print(getcwd());
-        // echo '<br>';
-        // var_dump($_SESSION['logged_in']);
-        // echo '<br>';
-        // var_dump($refresh_last);
-        // echo '<br>';
-        // var_dump($new_dir);
-        // echo '<br>';
-        // var_dump($_GET['new_dir']);
-        // echo '<br>';
-        // var_dump($_GET['my_way']);
-        // echo '<br>';
-        // var_dump($_SERVER['REQUEST_URI']);
-        // echo '<br>';
-        // var_dump($_SERVER['QUERY_STRING']);
-    ?>
-    
     <!-- logout button -->
     <br>
      <form action="index.php" method="post"> 
