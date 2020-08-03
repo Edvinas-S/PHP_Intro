@@ -1,5 +1,7 @@
 <?php declare(strict_types=1); ?>
 
+<?php require 'functions.php' ?>
+
 <?php
     //connect to database
     $servername = "127.0.0.1";
@@ -27,20 +29,20 @@
     //     echo "Error creating database: " . mysqli_error($conn) . '<br>';
     // }
 
+    // //======================================================================================
     // // sql to create table WORKERS
     // $sql = "CREATE TABLE workers (
     //     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     //     firstname VARCHAR(30) NOT NULL,
     //     course VARCHAR(30) NOT NULL
     //     )";
-    
     // if (mysqli_query($conn, $sql)) {
     //     echo "Table WORKERS created successfully <br>";
     // } else {
     //     echo "Error creating table: " . mysqli_error($conn) . '<br>';
     // }
 
-    // // sql to add values to workers
+    // // sql to add values to WORKERS
     // $sql = "INSERT INTO workers (`id`, `firstname`, `course`)
     //     VALUES 
     //         (1, 'Jonukas', 'Java'), (2, 'Gretute', 'PhP'), (3, 'Petriukas', 'HTML'),
@@ -56,19 +58,19 @@
     //     echo "Error adding workers: " . mysqli_error($conn) . '<br>';
     // }
 
+    // //======================================================================================
     // // sql to create table COURSES
     // $sql = "CREATE TABLE courses (
     //     course_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     //     coursename VARCHAR(30) NOT NULL
     //     )";
-    
     // if (mysqli_query($conn, $sql)) {
     //     echo "Table COURSES created successfully <br>";
     // } else {
     //     echo "Error creating table: " . mysqli_error($conn) . '<br>';
     // }
 
-    // // sql to add values to courses
+    // // sql to add values to COURSES
     // $sql = "INSERT INTO courses (`course_id`, `coursename`)
     //     VALUES 
     //          (1, 'Java'), (2, 'PhP'), (3, 'HTML'), (4, 'CSS'), (5, 'Python');
@@ -79,6 +81,13 @@
     //     echo "Error adding courses: " . mysqli_error($conn) . '<br>';
     // }
 
+    // //************************************************************************************//
+    // //  Important!! You need to disable MySql "Safe Updates Preference" to modify tables  //
+    // //************************************************************************************//
+    //
+    // $sql = 'SET SQL_SAFE_UPDATES = 0;';
+    // mysqli_query($conn, $sql);
+    
 ?>
 
 <!DOCTYPE html>
@@ -106,7 +115,7 @@
                 <th>id</th>
                 <th>Name</th>
                 <th>Assign to course</th>
-                <th>Action (for future use)</th>
+                <th>Action</th>
             </tr>
             <?php
             // Print to HTML WORKERS
@@ -115,7 +124,13 @@
             if (mysqli_num_rows($result) > 0) {
                 while($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>
-                    <td>". $row["id"] ."</td><td>". $row["firstname"] ."</td><td>". $row['course'] ."</td><td> For future use </td>
+                    <td>". $row["id"] ."</td>
+                    <td>". $row["firstname"] ."</td>
+                    <td>". $row['course'] ."</td>
+                    <td>
+                        <form action='functions.php' method='post'><input type='submit' name='delete_person' value='DELETE'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
+                        <form action='functions.php' method='post'><input type='submit' name='update_name' value='UPDATE NAME'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
+                    </td>
                         </tr>";
                 }
             } else {
@@ -123,6 +138,7 @@
                 <td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td>
                     </tr>";
             }
+            
             ?>
         </table>
     </main>

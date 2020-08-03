@@ -1,4 +1,5 @@
 <?php
+    //connect to database
     $servername = "127.0.0.1";
     $username = "root";
     $password = "mysql";
@@ -31,19 +32,24 @@
             <tr>
                 <th>Course title</th>
                 <th>Persons assigned to this course</th>
-                <th>Action (for future use)</th>
+                <th>Action</th>
             </tr>
             <?php
             // Print to HTML COURSES
-            $sql = "SELECT DISTINCT coursename, firstname FROM courses
-                    LEFT JOIN workers
-                    ON courses.coursename = workers.course
+            $sql = "SELECT coursename, group_concat(firstname) AS Persons_on_course FROM workers
+            JOIN courses 
+            WHERE workers.course = courses.coursename
+            GROUP BY courses.coursename
                     ;";
             $result = mysqli_query($conn, $sql);
             if (mysqli_num_rows($result) > 0) {
                 while($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>
-                    <td>". $row["coursename"] ."</td><td>". $row['firstname'] ."</td><td> For future use </td>
+                    <td>". $row["coursename"] ."</td>
+                    <td>". $row['Persons_on_course'] ."</td>
+                    <td>
+                        <form action='functions.php' method='post'><input type='submit' name='delete_course' value='DELETE'><input type='hidden' name='course_name' value='".$row['coursename']."'></form>
+                    </td>
                         </tr>";
                 }
             } else {
@@ -51,6 +57,25 @@
                 <td> 0 </td><td> 0 </td><td> 0 </td>
                     </tr>";
             }
+            // If there are persons without course print them 
+            // if('SELECT course FROM workers' == '' ) {
+                $sql = 'SELECT group_concat(firstname) AS Without_course FROM workers
+                    WHERE course = " "
+                    GROUP BY course
+                    ;';
+                $result = mysqli_query($conn, $sql);
+                if (mysqli_num_rows($result) > 0) {
+                    while($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>
+                        <td>The FREE one's</td><td>". $row['Without_course'] ."</td><td> For future use </td>
+                            </tr>";
+                    }
+                } else {
+                    echo "<tr>
+                    <td> 0 </td><td> 0 </td><td> 0 </td>
+                        </tr>";
+                }
+            // }
             ?>
         </table>
     </main>
