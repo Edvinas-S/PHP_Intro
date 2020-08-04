@@ -36,17 +36,16 @@
             </tr>
             <?php
             // Print to HTML COURSES
-            $sql = "SELECT coursename, group_concat(firstname) AS Persons_on_course FROM workers
-            JOIN courses 
-            WHERE workers.course = courses.coursename
-            GROUP BY courses.coursename
+            $sql = "SELECT c.coursename, group_concat(w.firstname SEPARATOR '; ') AS Persons FROM courses c
+                    LEFT JOIN workers w ON c.id = w.course_id
+                    GROUP BY c.coursename;
                     ;";
             $result = mysqli_query($conn, $sql);
             if (mysqli_num_rows($result) > 0) {
                 while($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>
                     <td>". $row["coursename"] ."</td>
-                    <td>". $row['Persons_on_course'] ."</td>
+                    <td>". $row['Persons'] ."</td>
                     <td>
                         <form action='functions.php' method='post'><input type='submit' name='delete_course' value='DELETE'><input type='hidden' name='course_name' value='".$row['coursename']."'></form>
                     </td>
@@ -58,16 +57,15 @@
                     </tr>";
             }
             // If there are persons without course print them 
-            // if('SELECT course FROM workers' == '' ) {
-                $sql = 'SELECT group_concat(firstname) AS Without_course FROM workers
-                    WHERE course = " "
-                    GROUP BY course
-                    ;';
+                $sql = "SELECT group_concat(firstname SEPARATOR '; ') AS free_ones FROM workers
+                WHERE course_id IS NULL
+                GROUP BY course_id;
+                    ;";
                 $result = mysqli_query($conn, $sql);
                 if (mysqli_num_rows($result) > 0) {
                     while($row = mysqli_fetch_assoc($result)) {
                         echo "<tr>
-                        <td>The FREE one's</td><td>". $row['Without_course'] ."</td><td> For future use </td>
+                        <td>The FREE one's</td><td>". $row['free_ones'] ."</td><td> For future use </td>
                             </tr>";
                     }
                 } else {

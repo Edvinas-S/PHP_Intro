@@ -30,5 +30,13 @@ if(isset($_POST['delete_course'])) {
 }
 
 // UPDATE person name from workers table 
-
+function update_name() {
+    global $conn; //      ".$_POST['person_form_id']."
+    $sql = "UPDATE workers SET `firstname` ="."'".$_POST['new_name']."'"." WHERE `id`=".$_POST['person_id'].";";
+    mysqli_query($conn, $sql);
+}
+if(isset($_POST['update_name'])) {
+    update_name();
+    header('Location: index.php');
+}
 ?>

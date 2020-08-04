@@ -31,11 +31,13 @@
 
     // //======================================================================================
     // // sql to create table WORKERS
-    // $sql = "CREATE TABLE workers (
-    //     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    //     firstname VARCHAR(30) NOT NULL,
-    //     course VARCHAR(30) NOT NULL
-    //     )";
+    // $sql = "CREATE TABLE `workers` (
+    //     `id` int(6) NOT NULL AUTO_INCREMENT,
+    //     `firstname` varchar(45) COLLATE utf8mb4_lithuanian_ci DEFAULT NULL,
+    //     `course_id` int(6) DEFAULT NULL,
+    //     PRIMARY KEY (`id`)
+    //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
+    //    ";
     // if (mysqli_query($conn, $sql)) {
     //     echo "Table WORKERS created successfully <br>";
     // } else {
@@ -43,27 +45,28 @@
     // }
 
     // // sql to add values to WORKERS
-    // $sql = "INSERT INTO workers (`id`, `firstname`, `course`)
+    // $sql = "INSERT INTO workers (`id`, `firstname`, `course_id`)
     //     VALUES 
-    //         (1, 'Jonukas', 'Java'), (2, 'Gretute', 'PhP'), (3, 'Petriukas', 'HTML'),
-    //         (4, 'Onutė', 'CSS'), (5, 'Mykoliukas', 'Python'), (6, 'Ugnelė', 'Php'),
-    //         (7, 'Skirmantas', 'Java'), (8, 'Ramunė', 'CSS'), (9, 'Jonukas', 'Java'),
-    //         (10, 'Gretute', 'PhP'), (11, 'Petriukas', ''), (12, 'Onutė', 'CSS'),
-    //         (13, 'Mykoliukas', ''), (14, 'Ugnelė', ''), (15, 'Skirmantas', 'Java'),
-    //         (16, 'Ramunė', '');
+    //         (1, 'Jonukas', 1), (2, 'Grytute', 2), (3, 'Petriukas', 3),
+    //         (4, 'Onutė', 4), (5, 'Mykoliukas', NULL), (6, 'Ugnelė', 1),
+    //         (7, 'Skirmantas', 2), (8, 'Ramunė', 3), (9, 'Jonukas', 4),
+    //         (10, 'Gretute', NULL), (11, 'Petriukas', 1), (12, 'Onutė', 2),
+    //         (13, 'Mykoliukas', 3), (14, 'Ugnelė', 4), (15, 'Skirmantas', NULL),
+    //         (16, 'Ramunė', 1), (NULL, 'Rapolas', 5);
     //     ";
     // if (mysqli_query($conn, $sql)) {
-    //     echo "Workeks added successfully <br>";
+    //     echo "Workers added successfully <br>";
     // } else {
     //     echo "Error adding workers: " . mysqli_error($conn) . '<br>';
     // }
 
     // //======================================================================================
     // // sql to create table COURSES
-    // $sql = "CREATE TABLE courses (
-    //     course_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    //     coursename VARCHAR(30) NOT NULL
-    //     )";
+    // $sql = "CREATE TABLE `courses` (
+    //     `id` int(6) NOT NULL AUTO_INCREMENT,
+    //     `coursename` varchar(45) COLLATE utf8mb4_lithuanian_ci NOT NULL,
+    //     PRIMARY KEY (`id`)
+    //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;";
     // if (mysqli_query($conn, $sql)) {
     //     echo "Table COURSES created successfully <br>";
     // } else {
@@ -71,7 +74,7 @@
     // }
 
     // // sql to add values to COURSES
-    // $sql = "INSERT INTO courses (`course_id`, `coursename`)
+    // $sql = "INSERT INTO courses (`id`, `coursename`)
     //     VALUES 
     //          (1, 'Java'), (2, 'PhP'), (3, 'HTML'), (4, 'CSS'), (5, 'Python');
     //     ";
@@ -119,17 +122,19 @@
             </tr>
             <?php
             // Print to HTML WORKERS
-            $sql = "SELECT id, firstname, course FROM workers";
+            $sql = "SELECT w.id, w.firstname, c.coursename FROM workers w
+                    LEFT JOIN courses c ON w.course_id = c.id;
+                    ";
             $result = mysqli_query($conn, $sql);
             if (mysqli_num_rows($result) > 0) {
                 while($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>
                     <td>". $row["id"] ."</td>
                     <td>". $row["firstname"] ."</td>
-                    <td>". $row['course'] ."</td>
+                    <td>". $row['coursename'] ."</td>
                     <td>
                         <form action='functions.php' method='post'><input type='submit' name='delete_person' value='DELETE'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
-                        <form action='functions.php' method='post'><input type='submit' name='update_name' value='UPDATE NAME'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
+                        <form action='functions.php' method='post'><input type='submit' name='update_name' name='open_new' value='UPDATE NAME'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
                     </td>
                         </tr>";
                 }
@@ -138,9 +143,13 @@
                 <td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td>
                     </tr>";
             }
-            
             ?>
         </table>
+        <div class='update_name'>
+            <form >
+                <input type="text" name="new_name" value="QQQQQQ" placeholder="Here write new name">
+            </form>
+        </div>
     </main>
     <footer>
        This is for education. 
