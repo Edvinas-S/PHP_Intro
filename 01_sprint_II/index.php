@@ -134,7 +134,7 @@
                     <td>". $row['coursename'] ."</td>
                     <td>
                         <form action='functions.php' method='post'><input type='submit' name='delete_person' value='DELETE'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
-                        <form action='functions.php' method='post'><input type='submit' name='update_name' name='open_new' value='UPDATE NAME'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
+                        <form method='post'><input type='submit' name='update_name' value='UPDATE NAME'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
                     </td>
                         </tr>";
                 }
@@ -145,11 +145,16 @@
             }
             ?>
         </table>
-        <div class='update_name'>
-            <form >
-                <input type="text" name="new_name" value="QQQQQQ" placeholder="Here write new name">
-            </form>
-        </div>
+        <?php
+            if(isset($_POST['update_name']))
+            echo "<div class='update_name'>
+                    <form action='functions.php' method='post'>
+                        <input type='text' name='new_name' placeholder='Here write new name'>
+                        <input type='hidden' name='pers_id' value='".$_POST['person_id']."'>
+                        <input type='submit' name='name_submit' value='SUBMIT'>
+                    </form>
+                </div>";
+        ?>
     </main>
     <footer>
        This is for education. 

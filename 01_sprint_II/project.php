@@ -48,6 +48,7 @@
                     <td>". $row['Persons'] ."</td>
                     <td>
                         <form action='functions.php' method='post'><input type='submit' name='delete_course' value='DELETE'><input type='hidden' name='course_name' value='".$row['coursename']."'></form>
+                        <form method='post'><input type='submit' name='rename_course' value='RENAME COURSE'><input type='hidden' name='course_name' value='".$row["coursename"]."'></form>
                     </td>
                         </tr>";
                 }
@@ -58,9 +59,9 @@
             }
             // If there are persons without course print them 
                 $sql = "SELECT group_concat(firstname SEPARATOR '; ') AS free_ones FROM workers
-                WHERE course_id IS NULL
-                GROUP BY course_id;
-                    ;";
+                        WHERE course_id IS NULL
+                        GROUP BY course_id;
+                        ;";
                 $result = mysqli_query($conn, $sql);
                 if (mysqli_num_rows($result) > 0) {
                     while($row = mysqli_fetch_assoc($result)) {
@@ -76,6 +77,16 @@
             // }
             ?>
         </table>
+        <?php
+            if(isset($_POST['rename_course']))
+            echo "<div class='update_name'>
+                    <form action='functions.php' method='post'>
+                        <input type='text' name='new_course_name' placeholder='Here write new name'>
+                        <input type='hidden' name='old_name' value='".$_POST['course_name']."'>
+                        <input type='submit' name='rename_submit' value='SUBMIT'>
+                    </form>
+                </div>";
+        ?>
     </main>
     <footer>
        This is for education. 

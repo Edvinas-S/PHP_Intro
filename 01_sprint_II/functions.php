@@ -31,12 +31,23 @@ if(isset($_POST['delete_course'])) {
 
 // UPDATE person name from workers table 
 function update_name() {
-    global $conn; //      ".$_POST['person_form_id']."
-    $sql = "UPDATE workers SET `firstname` ="."'".$_POST['new_name']."'"." WHERE `id`=".$_POST['person_id'].";";
+    global $conn;
+    $sql = "UPDATE workers SET `firstname` ="."'".$_POST['new_name']."'"." WHERE `id`=".$_POST['pers_id'].";";
     mysqli_query($conn, $sql);
 }
-if(isset($_POST['update_name'])) {
+if(isset($_POST['name_submit'])) {
     update_name();
     header('Location: index.php');
+}
+
+// RENAME course name from courses table 
+function rename_course() {
+    global $conn;
+    $sql = "UPDATE courses SET `coursename` ="."'".$_POST['new_course_name']."'"." WHERE `coursename`="."'".$_POST['old_name']."'".";";
+    mysqli_query($conn, $sql);
+}
+if(isset($_POST['rename_submit'])) {
+    rename_course();
+    header('Location: project.php');
 }
 ?>
