@@ -48,11 +48,7 @@
     // $sql = "INSERT INTO workers (`id`, `firstname`, `course_id`)
     //     VALUES 
     //         (1, 'Jonukas', 1), (2, 'Grytute', 2), (3, 'Petriukas', 3),
-    //         (4, 'Onutė', 4), (5, 'Mykoliukas', NULL), (6, 'Ugnelė', 1),
-    //         (7, 'Skirmantas', 2), (8, 'Ramunė', 3), (9, 'Jonukas', 4),
-    //         (10, 'Gretute', NULL), (11, 'Petriukas', 1), (12, 'Onutė', 2),
-    //         (13, 'Mykoliukas', 3), (14, 'Ugnelė', 4), (15, 'Skirmantas', NULL),
-    //         (16, 'Ramunė', 1), (NULL, 'Rapolas', 5);
+    //         (4, 'Onutė', 4), (5, 'Mykoliukas', 5), (6, 'Pavyzdukas', NULL);
     //     ";
     // if (mysqli_query($conn, $sql)) {
     //     echo "Workers added successfully <br>";
@@ -105,12 +101,12 @@
 <body>
     <header>
         <form action="index.php" method="post">
-            <button type="submit">Darbuotojai</button>
+            <button type="submit">Workers</button>
         </form>
         <form action="project.php" method="post">
-            <button type="submit">Projektai</button>
+            <button type="submit">Courses</button>
         </form>
-        <div class="name">Projekto valdymas</div>
+        <div class="name">Project manager</div>
     </header>
     <main>
         <table>
@@ -135,6 +131,7 @@
                     <td>
                         <form action='functions.php' method='post'><input type='submit' name='delete_person' value='DELETE'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
                         <form method='post'><input type='submit' name='update_name' value='UPDATE NAME'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
+                        <form method='post'><input type='submit' name='update_course' value='CHANGE COURSE'><input type='hidden' name='person_id' value='".$row["id"]."'></form>
                     </td>
                         </tr>";
                 }
@@ -146,15 +143,58 @@
             ?>
         </table>
         <?php
+        // RENAME worker
             if(isset($_POST['update_name']))
             echo "<div class='update_name'>
                     <form action='functions.php' method='post'>
-                        <input type='text' name='new_name' placeholder='Here write new name'>
+                        <label>Worker id: &nbsp; ".$_POST['person_id']." </label>
+                        <input type='text' name='new_name' placeholder='Here write new name' required>
                         <input type='hidden' name='pers_id' value='".$_POST['person_id']."'>
                         <input type='submit' name='name_submit' value='SUBMIT'>
                     </form>
                 </div>";
         ?>
+        <?php
+        // CHANGE worker course
+            if(isset($_POST['update_course'])) {
+            echo "<div class='update_course'>
+                    <form action='functions.php' method='post'>
+                        <label name='new_coursename'>Worker id: &nbsp; ".$_POST['person_id']." </label>
+                        <input type='hidden' name='again_id' value='".$_POST['person_id']."'>
+                        <select name='new_coursename' id='new_coursename'>
+                            <option name='selected_course' value='NULL'>Free one ONE</option>";
+                            $sql_c = 'SELECT id, coursename FROM courses';
+                            $result_c = mysqli_query($conn, $sql_c);
+                                if (mysqli_num_rows($result_c) > 0) {
+                                    while($row_c = mysqli_fetch_assoc($result_c)) {
+                                        print("<option name='selected_course' value='".$row_c['id']."'>".$row_c['coursename']."</option>");
+                                    }
+                                }; echo "
+                        </select>
+                        <input type='submit' name='course_submit' value='SUBMIT'>
+                    </form>
+                </div>";}
+        ?>
+        <br>
+        <h3>Add new worker:</h3>
+        <form action="functions.php" method="post" class="new_worker">
+            <input type="text" name="new_worker" placeholder="workers name" required>
+            <label for="courses"></label>
+            <select name="courses" id="courses">
+                <?php
+                // DROPDOWN logic
+                echo "<option value='NULL'>Free one</option>";
+                    $sql = "SELECT id, coursename FROM courses;";
+                    $result = mysqli_query($conn, $sql);
+                        if (mysqli_num_rows($result) > 0) {
+                        while($row = mysqli_fetch_assoc($result)) {
+                    echo "<option name='select_course' value='".$row['id']."'>".$row['coursename']."</option>";
+                        }
+                    }
+                ?>
+            </select>
+            <input type="submit" name="add_worker" value="ADD">
+        </form>
     </main>
     <footer>
        This is for education. 

@@ -20,12 +20,12 @@
 <body>
     <header>
         <form action="index.php" method="post">
-            <button type="submit">Darbuotojai</button>
+            <button type="submit">Workers</button>
         </form>
         <form action="project.php" method="post">
-            <button type="submit">Projektai</button>
+            <button type="submit">Courses</button>
         </form>
-        <div class="name">Projekto valdymas</div>
+        <div class="name">Project manager</div>
     </header>
     <main>
         <table>
@@ -69,24 +69,26 @@
                         <td>The FREE one's</td><td>". $row['free_ones'] ."</td><td> For future use </td>
                             </tr>";
                     }
-                } else {
-                    echo "<tr>
-                    <td> 0 </td><td> 0 </td><td> 0 </td>
-                        </tr>";
                 }
-            // }
             ?>
         </table>
         <?php
             if(isset($_POST['rename_course']))
             echo "<div class='update_name'>
                     <form action='functions.php' method='post'>
+                        <label>Selected: &nbsp;".$_POST['course_name']." </label>
                         <input type='text' name='new_course_name' placeholder='Here write new name'>
                         <input type='hidden' name='old_name' value='".$_POST['course_name']."'>
                         <input type='submit' name='rename_submit' value='SUBMIT'>
                     </form>
                 </div>";
         ?>
+        <br>
+        <h3>Add new course:</h3>
+        <form action="functions.php" method="post" class="new_course">
+            <input type="text" name="new_course" placeholder="course name" required>
+            <input type="submit" name="add_course" value="ADD">
+        </form>
     </main>
     <footer>
        This is for education. 

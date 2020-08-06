@@ -7,6 +7,7 @@
     
     $conn = mysqli_connect($servername, $username, $password, $dbname);
 
+    
 // DELETE person from workers table
 function delete_person() {
     global $conn;
@@ -49,5 +50,40 @@ function rename_course() {
 if(isset($_POST['rename_submit'])) {
     rename_course();
     header('Location: project.php');
+}
+
+// ADD new worker
+function add_new_worker() {
+    global $conn;
+    $sql = "INSERT INTO workers (`id`, `firstname`, `course_id`)
+            VALUES (NULL,"."'".$_POST['new_worker']."'".",".$_POST['courses'].");";
+    mysqli_query($conn, $sql);
+}
+if(isset($_POST['add_worker'])) {
+    add_new_worker();
+    header('Location: index.php');
+}
+
+// ADD new course
+function add_new_course() {
+    global $conn;
+    $sql = "INSERT INTO courses (`id`, `coursename`)
+    VALUES (NULL,"."'".$_POST['new_course']."'".");";
+    mysqli_query($conn, $sql);
+}
+if(isset($_POST['add_course'])) {
+    add_new_course();
+    header('Location: project.php');
+}
+
+// CHANGE workers course
+function change_course() {
+    global $conn;
+    $sql = "UPDATE workers SET `course_id` = ".$_POST['new_coursename']." WHERE `id` = ".$_POST['again_id'].";";
+    mysqli_query($conn, $sql);
+}
+if(isset($_POST['course_submit'])) {
+    change_course();
+    header('Location: index.php');
 }
 ?>
