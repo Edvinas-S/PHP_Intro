@@ -1,4 +1,3 @@
-[![HitCount](http://hits.dwyl.com/Edvinas-S/https://githubcom/Edvinas-S/PHP_Intro/tree/master/01_sprint_II.svg)](http://hits.dwyl.com/Edvinas-S/https://githubcom/Edvinas-S/PHP_Intro/tree/master/01_sprint_II)
 # Simple Project Manager with PHP
 
 ## This project was for education of RAW PHP + MySQL Workbench
@@ -8,7 +7,7 @@
   - add/delete worker;
   - add/delete course;
   - rename worker/course;
-  - assign/unsign worker to course;
+  - assign/unsign worker to/from course;
 
 ### Installation
 
