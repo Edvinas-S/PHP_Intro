@@ -1,0 +1,12 @@
+{
+    "name": "edvinas/app0811_composer_orm",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "doctrine/orm": "^2.7"
+    },
+    "autoload": {
+        "files": ["src/Product.php"]
+    }
+
+}
