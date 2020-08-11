@@ -18,9 +18,9 @@
             public static $s1 = "$";
             public $s2 = "€";
             
-            public static function f1(){
-                print($this->$s2 . "f1()");
-            }
+            // public static function f1(){
+            //     print($this->$s2 . "f1()");
+            // }
             
             public function f2(){
                 print(self::$s1 . "f2()");
@@ -39,7 +39,7 @@
         // CurrencyUtil::f2();
         
         // PHP Fatal error:  Uncaught Error: Using $this when not in object context ...
-        $o->f1();
+        // $o->f1();
         
         // SINGLETON
         class DbConnetion {
