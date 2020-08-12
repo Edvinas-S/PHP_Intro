@@ -1,5 +1,6 @@
 <?php
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -29,6 +30,10 @@ class User
      *      )
      */
     private $groups;
+
+    public function __construct() {
+        //$this->groups = ArrayCollection();
+    }
 }
 
 /**
@@ -63,3 +68,4 @@ class Group
      */
     protected $id;
 }
+?>
