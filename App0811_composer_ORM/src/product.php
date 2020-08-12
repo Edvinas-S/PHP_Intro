@@ -19,6 +19,16 @@ class Product
      */
     protected $name;
 
+    /**
+     * @ORM\Column(
+     * name="status",
+     * type="boolean",
+     * options={"default": 0}
+     * )
+     */
+    protected $status = 0;
+
+
     public function getId()
     {
         return $this->id;
