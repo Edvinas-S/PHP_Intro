@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+$route_prefix = '/Laravel_test/'; // reikalingas todėl, kad kai ateiname iš localost/app, tai url nėra “/”, bet “/app
+Route::get($route_prefix . '/', function () {
+    return view('welcome');
+});
+
+
 Route::get('/', function () {
     return view('welcome');
 });
