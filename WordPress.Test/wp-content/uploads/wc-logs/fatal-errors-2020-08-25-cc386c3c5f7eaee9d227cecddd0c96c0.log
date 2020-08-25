@@ -1,0 +1,4 @@
+2020-08-25T11:56:44+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\Program Files\Ampps\www\WordPress.Test\wp-includes\wp-db.php on line 2033
+
+2020-08-25T12:08:48+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\Program Files\Ampps\www\WordPress.Test\wp-content\plugins\woocommerce\includes\admin\class-wc-admin-post-types.php on line 11
+
